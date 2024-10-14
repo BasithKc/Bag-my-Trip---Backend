@@ -5,6 +5,6 @@ const adminSchema = new mongoose.Schema({
   password: String
 })
 
-const admin = new mongoose.model('admin', adminSchema)
+const admin = mongoose.model('admin', adminSchema)
 
 module.exports = admin

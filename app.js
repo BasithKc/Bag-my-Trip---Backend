@@ -5,7 +5,10 @@ const cors = require('cors')
 
 //Import configs
 const dbConnect = require('./config/db')
+
+// Import routes
 const adminAuthRoute = require('./routes/adminAuthRoutes')
+const toursApiRoutes = require('./routes/toursApiRoutes')
 
 //Express app setup
 const app = express();
@@ -17,6 +20,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/admin/auth', adminAuthRoute)
+app.use('/admin/tours', toursApiRoutes)
 
 //Database connecting and port listen
 dbConnect().then(() => {

@@ -1,5 +1,6 @@
 // Imporing models
 const Category = require('../models/category')
+const Tour = require('../models/tour')
 
 module.exports = {
   //Function for creating tour category
@@ -28,6 +29,7 @@ module.exports = {
     }
   },
 
+  // Categery getting function
   getCategories: async (req, res) => {
     try {
       const categories = await Category.find({}) //Retrieve categories from db
@@ -45,5 +47,32 @@ module.exports = {
         message: 'Server error, Cannot get categories'
       })
     }
+  },
+
+  //Tour creating function
+  createTour: async (req, res) => {
+    const tourData = req.body;
+    console.log(req.files);
+
+    // Parse stringified JSON fields
+    ['itinerary', 'hotel', 'cabin'].forEach(field => {
+      if (tourData[field]) {
+        tourData[field] = JSON.parse(tourData[field]);
+      }
+    });
+    
+    console.log(tourData);
+    // Handle file uploads
+    if (req.files) {
+      if (req.files.featureImage) {
+        tourData.featureImage = req.files.featureImage[0];
+      }
+      if (req.files.gallery) {
+        tourData.gallery = req.files.gallery;
+      }
+    }
+
+    // Proceed with creating the tour using tourData
+    // ...
   }
 }

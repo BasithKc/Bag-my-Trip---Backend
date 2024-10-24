@@ -1,10 +1,7 @@
 const router = require('express').Router()
-const multer = require('multer')
 
-const storage = multer.memoryStorage(); // Or use diskStorage if you prefer
-const upload = multer({
-  storage: storage,
-});
+//Import multer
+const upload = require('../config/multer')
 
 // Import controller
 const tourApiController = require('../controller/toursApiController')
@@ -20,6 +17,9 @@ router.post('/create', upload.fields([
   { name: 'featureImage', maxCount: 1 },
   { name: 'gallery', maxCount: 10 }
 ]), tourApiController.createTour)
+
+//Endpont for get tours
+router.get('/get', tourApiController.getTour)
 
 
 module.exports = router

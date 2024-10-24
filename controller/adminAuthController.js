@@ -26,7 +26,7 @@ module.exports = {
         })
       } else {
         //Generate token
-        const token = await jwt.sign({ userName: existUser.userName }, jwt_secret, { expiresIn: '1h' })
+        const token = await jwt.sign({ userId: existUser._id }, jwt_secret, { expiresIn: '1h' })
         return res.status(200).json({
           success: true,
           message: "Successfully logged in",

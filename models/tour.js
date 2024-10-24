@@ -2,17 +2,13 @@ const mongoose = require('mongoose')
 
 const tourSchema = new mongoose.Schema({
   title: String,
+  tripType: String,
   description: String,
   location: String,
   pricePerPerson: Number,
   duration: String,
   categories: [String],
-  itinerary: [{
-    title: String,
-    description: String,
-    included: String,
-    isDone: Boolean
-  }],
+  itinerary: [Object],
   hotel: [{
     name: String,
     star: Number,
@@ -24,8 +20,12 @@ const tourSchema = new mongoose.Schema({
     quantity: Number
   }],
   featureImage: String,
-  gallery: [String]
-});
+  gallery: [String],
+  publishTime: {
+    type: Date,
+    default: Date.now()
+  }
+}, { timestamps: true });
 
 const Tour = mongoose.model('tour', tourSchema)
 module.exports = Tour

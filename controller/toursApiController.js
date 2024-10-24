@@ -1,3 +1,5 @@
+const { uploadFile } = require('../config/s3')
+
 // Imporing models
 const Category = require('../models/category')
 const Tour = require('../models/tour')
@@ -51,28 +53,82 @@ module.exports = {
 
   //Tour creating function
   createTour: async (req, res) => {
-    const tourData = req.body;
-    console.log(req.files);
+    try {
+      const tourData = req.body;
 
-    // Parse stringified JSON fields
-    ['itinerary', 'hotel', 'cabin'].forEach(field => {
-      if (tourData[field]) {
-        tourData[field] = JSON.parse(tourData[field]);
-      }
-    });
-    
-    console.log(tourData);
-    // Handle file uploads
-    if (req.files) {
+      // Parse stringified JSON fields
+      ['itinerary', 'hotel', 'cabin'].forEach(field => {
+        if (tourData[field]) {
+          tourData[field] = JSON.parse(tourData[field]);
+        }
+      });
+
+      console.log(tourData);
+      // Handle file uploads
       if (req.files.featureImage) {
-        tourData.featureImage = req.files.featureImage[0];
+        const featureImageUrl = await uploadFile(
+          req.files.featureImage[0],
+          'feature-images'
+        );
+        tourData.featureImage = featureImageUrl
       }
+
+      // Handle gallery images upload
       if (req.files.gallery) {
-        tourData.gallery = req.files.gallery;
+        const galleryUrls = await Promise.all(
+          req.files.gallery.map(async (file) => {
+            return await uploadFile(file, 'gallery-images')
+          })
+        )
+        tourData.gallery = galleryUrls
       }
+      console.log(tourData);
+
+      // Create a new instance of tour in mongodb
+      const tour = new Tour(tourData)
+      await tour.save()
+      console.log(tour);
+
+
+      res.status(201).json({
+        success: true,
+        message: 'Tour Created successfully',
+        data: tour
+      })
+    } catch (error) {
+      console.error('Error creating tour:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error creating tour',
+        error: error.message
+      });
     }
 
-    // Proceed with creating the tour using tourData
-    // ...
+  },
+
+  getTour: async (req, res) => {
+    try {
+      const tours = await Tour.find({})
+
+      if (!tours) {
+        return res.status(400).json({
+          success: false,
+          message: 'No tours found'
+        })
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Fetched tours',
+        tours
+      })
+    } catch (error) {
+      console.error(error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Can't fetch tours"
+      })
+    }
   }
 }

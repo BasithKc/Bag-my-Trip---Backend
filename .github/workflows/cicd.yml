@@ -1,0 +1,36 @@
+name: Deploy Node Application
+
+on:
+  push:
+    branches:
+      - feature
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Create .env file
+        run: |
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >.env
+          echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >>.env
+          echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+      - name: Login to dockerhub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Build docker image
+        run: docker bulid -t basith7618/nodejs-app .
+      - name: Publish image to dockerhub
+        run: docker push basith7618/nodejs-app:latest
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from dockerhub
+        run: docker pull basith7618/nodejs-app:latest
+      - name: Delete old container
+        run: docker rm -f basith7618/nodejs-app
+      - name: Run docker container
+        run: docker container -d -p 5000 --name nodejs-app-container  basith7618/nodejs-app

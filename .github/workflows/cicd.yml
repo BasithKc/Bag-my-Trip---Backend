@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSSWORD }}
       - name: Build docker image
-        run: docker bulid -t basith7618/nodejs-app .
+        run: docker build -t basith7618/nodejs-app .
       - name: Publish image to dockerhub
         run: docker push basith7618/nodejs-app:latest
   deploy:

@@ -1,4 +1,4 @@
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
+const { S3Client, PutObjectCommand, DeleteObjectsCommand } = require('@aws-sdk/client-s3')
 
 const bucketName = "bagmytrip";
 const region = "eu-north-1";
@@ -16,7 +16,7 @@ const s3 = new S3Client({
 
 //uploads a file to s3
 async function uploadFile(file, folder) {
-  const fileName = `${folder}/${Date.now()}-${file.originalname} `
+  const fileName = `${folder}/${Date.now()}-${file.originalname}`
 
   const uploadParams = {
     Bucket: bucketName,
@@ -32,7 +32,29 @@ async function uploadFile(file, folder) {
   return `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
 }
 
+async function deleteImages(urls) {
+  const objects = urls.map(url => ({
+    Key: getKeyFromUrl(url)
+  }))
+
+  //Create params
+  const deleteParams = {
+    Bucket: bucketName,
+    Delete: { Objects: objects }
+  }
+  const command = await new DeleteObjectsCommand(deleteParams)
+  const response = await s3.send(command)
+  return response
+}
+
+// Extract the key from S3 URL
+function getKeyFromUrl(url) {
+  const urlParts = url.split('.amazonaws.com/')
+  return urlParts[1].trim()
+}
+
 exports.uploadFile = uploadFile
+exports.deleteImages = deleteImages
 
 
 

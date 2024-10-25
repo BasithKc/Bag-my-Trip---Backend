@@ -1,4 +1,4 @@
-const { uploadFile } = require('../config/s3')
+const { uploadFile, deleteImages } = require('../config/s3')
 
 // Imporing models
 const Category = require('../models/category')
@@ -63,7 +63,6 @@ module.exports = {
         }
       });
 
-      console.log(tourData);
       // Handle file uploads
       if (req.files.featureImage) {
         const featureImageUrl = await uploadFile(
@@ -82,13 +81,10 @@ module.exports = {
         )
         tourData.gallery = galleryUrls
       }
-      console.log(tourData);
 
       // Create a new instance of tour in mongodb
       const tour = new Tour(tourData)
       await tour.save()
-      console.log(tour);
-
 
       res.status(201).json({
         success: true,
@@ -108,7 +104,9 @@ module.exports = {
 
   getTour: async (req, res) => {
     try {
-      const tours = await Tour.find({})
+      const tours = await Tour.find()
+        .populate('categories')
+        .exec()
 
       if (!tours) {
         return res.status(400).json({
@@ -128,6 +126,35 @@ module.exports = {
       return res.status(500).json({
         success: false,
         message: "Can't fetch tours"
+      })
+    }
+  },
+
+  //Deleting tour
+  deleteTour: async (req, res) => {
+    const tourId = req.params.id
+    try {
+      //Get the tour to collect image urls
+      const tour = await Tour.findById(tourId)
+
+      //Collecting all image urls
+      const imagesToDelete = [tour.featureImage, ...(tour.gallery || [])]
+
+      if (imagesToDelete.length > 0) {
+        const response = await deleteImages(imagesToDelete) //Delete image from s3 bucket
+
+        await Tour.findByIdAndDelete(tourId) //Delete from mongodb
+        return res.status(201).json({
+          success: true,
+          message: "Tour deleted successfully"
+        })
+      }
+
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({
+        success: false,
+        message: 'Tour deletion failed!!'
       })
     }
   }

@@ -21,5 +21,8 @@ router.post('/create', upload.fields([
 //Endpont for get tours
 router.get('/get', tourApiController.getTour)
 
+//Endpoint for deleting tour
+router.delete('/delete/:id', tourApiController.deleteTour)
+
 
 module.exports = router

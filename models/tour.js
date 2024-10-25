@@ -7,8 +7,11 @@ const tourSchema = new mongoose.Schema({
   location: String,
   pricePerPerson: Number,
   duration: String,
-  categories: [String],
-  itinerary: [Object],
+  categories: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'category'
+  }],
+  itinerary: [],
   hotel: [{
     name: String,
     star: Number,

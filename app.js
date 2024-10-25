@@ -9,6 +9,7 @@ const dbConnect = require('./config/db')
 // Import routes
 const adminAuthRoute = require('./routes/adminAuthRoutes')
 const toursApiRoutes = require('./routes/toursApiRoutes')
+const userRoutes = require('./routes/userRoutes')
 
 //Express app setup
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/admin/auth', adminAuthRoute)
 app.use('/admin/tours', toursApiRoutes)
+app.use('/user/tours', userRoutes)
 
 //Database connecting and port listen
 dbConnect().then(() => {

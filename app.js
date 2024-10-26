@@ -17,7 +17,10 @@ const port = process.env.PORT || 5000;
 
 //Middle ware for data passing and session
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+  orgin: 'http://13.49.69.58:4200/',
+  credentials: true
+}))
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/admin/auth', adminAuthRoute)

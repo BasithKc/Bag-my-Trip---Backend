@@ -63,13 +63,28 @@ module.exports = {
         }
       });
 
+      function transformTourData(tourData) {
+        return {
+          ...tourData,
+          itinerary: tourData.itinerary.map(item => ({
+            ...item,
+            included: item.included.split(',').map(str => str.trim())
+          }))
+        };
+      }
+
+      // Usage
+      const transformedTourData = transformTourData(tourData);
+      console.log(transformedTourData);
+
+
       // Handle file uploads
       if (req.files.featureImage) {
         const featureImageUrl = await uploadFile(
           req.files.featureImage[0],
           'feature-images'
         );
-        tourData.featureImage = featureImageUrl
+        transformedTourData.featureImage = featureImageUrl
       }
 
       // Handle gallery images upload
@@ -79,11 +94,11 @@ module.exports = {
             return await uploadFile(file, 'gallery-images')
           })
         )
-        tourData.gallery = galleryUrls
+        transformedTourData.gallery = galleryUrls
       }
 
       // Create a new instance of tour in mongodb
-      const tour = new Tour(tourData)
+      const tour = new Tour(transformedTourData)
       await tour.save()
 
       res.status(201).json({

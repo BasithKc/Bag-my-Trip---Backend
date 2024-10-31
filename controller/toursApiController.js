@@ -63,6 +63,7 @@ module.exports = {
         }
       });
 
+      //Function transforming includes field in itinerary
       function transformTourData(tourData) {
         return {
           ...tourData,
@@ -72,17 +73,13 @@ module.exports = {
           }))
         };
       }
-
-      // Usage
       const transformedTourData = transformTourData(tourData);
-      console.log(transformedTourData);
-
 
       // Handle file uploads
       if (req.files.featureImage) {
         const featureImageUrl = await uploadFile(
           req.files.featureImage[0],
-          'feature-images'
+          'feature-image'
         );
         transformedTourData.featureImage = featureImageUrl
       }
@@ -101,14 +98,14 @@ module.exports = {
       const tour = new Tour(transformedTourData)
       await tour.save()
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         message: 'Tour Created successfully',
         data: tour
       })
     } catch (error) {
       console.error('Error creating tour:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Error creating tour',
         error: error.message
@@ -117,6 +114,7 @@ module.exports = {
 
   },
 
+  // function returning all tours
   getTour: async (req, res) => {
     try {
       const tours = await Tour.find()
@@ -171,6 +169,99 @@ module.exports = {
         success: false,
         message: 'Tour deletion failed!!'
       })
+    }
+  },
+
+  // Get tour by id
+  getTourById: async (req, res) => {
+    try {
+      const tourId = req.params.tourId
+
+      const tour = await Tour.findById(tourId)
+
+      if (tour) {
+        return res.status(200).json({
+          success: true,
+          message: "Successfully fetched tour",
+          tour
+        })
+      }
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Cannot fetch the tour'
+      })
+    }
+  },
+
+  // update tour
+  updateTour: async (req, res) => {
+    try {
+      const tourData = req.body;
+      const tourId = req.params.id
+
+      //Parse stringified JSON fields
+      const variablesToParse = ['itinerary', 'hotel', 'cabin', 'existingGallery']
+      variablesToParse.forEach(field => {
+        if (tourData[field]) {
+          tourData[field] = JSON.parse(tourData[field])
+        }
+      })
+
+      //Function transforming includes field in itinerary
+      function transformTourData(tourData) {
+        return {
+          ...tourData,
+          itinerary: tourData.itinerary.map(item => ({
+            ...item,
+            included: item.included.split(',').map(str => str.trim())
+          }))
+        };
+      }
+
+      const transformedTourData = transformTourData(tourData);
+
+      //Handlefile uploads
+      if (req.files.featureImage) {
+        const featureImageUrl = await uploadFile(req.files.featureImage[0], 'feature-image')
+
+        transformedTourData.featureImage = featureImageUrl
+      } else if (tourData.existingFeature) {
+        transformedTourData.featureImage = tourData.existingFeature
+      }
+
+
+      // handle gallery images uplaod
+      if (req.files.gallery) {
+        const galleryUrls = await Promise.all(req.files.gallery.map(async (file) => {
+          return await uploadFile(file, 'gallery-images')
+        }))
+        transformedTourData.gallery = galleryUrls
+      }
+      if (tourData.existingGallery.length) {
+        tourData.existingGallery.forEach(gallery => {
+          transformedTourData.gallery.push(gallery)
+        })
+      }
+
+      const { existingFeature, existingGallery, ...cleanedTourData } = transformedTourData;
+
+      // Update in mongodb
+      const updatedTour = await Tour.findByIdAndUpdate(tourId, cleanedTourData)
+
+      return res.status(200).json({
+        success: true,
+        message: 'Tour updated successfully',
+        data: updatedTour
+
+      })
+    } catch (error) {
+      console.error('Error creating tour:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Error creating tour',
+        error: error.message
+      });
     }
   }
 }

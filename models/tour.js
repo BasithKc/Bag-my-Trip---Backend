@@ -5,7 +5,7 @@ const itinerarySchema = new mongoose.Schema({
     type: String
   },
   description: String,
-  includes: [String]
+  included: [String]
 })
 
 const tourSchema = new mongoose.Schema({

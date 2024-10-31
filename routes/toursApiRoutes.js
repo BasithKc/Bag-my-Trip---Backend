@@ -1,5 +1,4 @@
 const router = require('express').Router()
-
 //Import multer
 const upload = require('../config/multer')
 
@@ -23,6 +22,14 @@ router.get('/get', tourApiController.getTour)
 
 //Endpoint for deleting tour
 router.delete('/delete/:id', tourApiController.deleteTour)
+
+// Get tour by id
+router.get('/:tourId', tourApiController.getTourById)
+
+router.put('/update/:id', upload.fields([
+  { name: 'featureImage', maxCount: 1 },
+  { name: 'gallery', maxCount: 10 }
+]), tourApiController.updateTour)
 
 
 module.exports = router

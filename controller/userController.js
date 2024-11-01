@@ -5,7 +5,7 @@ module.exports = {
   //Function for fetch all tours
   getAllTours: async (req, res) => {
     try {
-      const tours = await Tour.find().select('_id title featureImage pricePerPerson')
+      const tours = await Tour.find().select('_id title featureImage pricePerPerson duration')
 
       return res.status(200).json({
         success: true,

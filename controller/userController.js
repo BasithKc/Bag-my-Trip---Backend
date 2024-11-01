@@ -1,5 +1,9 @@
 //Import models
 const Tour = require('../models/tour')
+const Book = require('../models/book')
+
+// Nodemailer
+const transporter = require('../config/nodemailer')
 
 module.exports = {
   //Function for fetch all tours
@@ -36,6 +40,43 @@ module.exports = {
       return res.status(400).json({
         success: false,
         message: "Cannot fetch tour details"
+      })
+    }
+  },
+
+  // Function for booking a tour
+  bookTour: async (req, res) => {
+    try {
+      const bookDetials = req.body
+
+      const newBook = new Book(bookDetials)
+      await newBook.save()
+
+      // Send email notification
+      const mailOption = {
+        from: process.env.EMAIL_USER,
+        to: process.env.OWNER_EMAIL,
+        subject: 'New Tour Booking!!',
+        html: `
+        <h2>New Booking Details</h2>
+        <p><strong>Customer Name:</strong> ${bookDetials.name}</p>
+        <p><strong>Phone:</strong> ${bookDetials.phone}</p>
+        <p><strong>Number of Tickets:</strong> ${bookDetials.tickets}</p>
+        <p><strong>Tour ID:</strong> ${bookDetials.tourId}</p>
+        <p><strong>Booking Time:</strong> ${new Date().toLocaleString()}</p>
+      `
+      }
+
+      await transporter.sendMail(mailOption)
+
+      return res.status(200).json({
+        success: true,
+        message: "Tour booked successfully. We will contact you soon"
+      })
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Server error"
       })
     }
   }

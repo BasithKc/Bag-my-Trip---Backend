@@ -49,6 +49,9 @@ module.exports = {
     try {
       const bookDetials = req.body
 
+      // Fetch tour detials
+      const tourDetails = await Tour.findById(bookDetials.tourId).select('title')
+
       const newBook = new Book(bookDetials)
       await newBook.save()
 
@@ -62,7 +65,7 @@ module.exports = {
         <p><strong>Customer Name:</strong> ${bookDetials.name}</p>
         <p><strong>Phone:</strong> ${bookDetials.phone}</p>
         <p><strong>Number of Tickets:</strong> ${bookDetials.tickets}</p>
-        <p><strong>Tour ID:</strong> ${bookDetials.tourId}</p>
+        <p><strong>Tour ID:</strong> ${tourDetails.title}</p>
         <p><strong>Booking Time:</strong> ${new Date().toLocaleString()}</p>
       `
       }
@@ -74,6 +77,8 @@ module.exports = {
         message: "Tour booked successfully. We will contact you soon"
       })
     } catch (error) {
+      console.log(error);
+
       return res.status(500).json({
         success: false,
         message: "Server error"

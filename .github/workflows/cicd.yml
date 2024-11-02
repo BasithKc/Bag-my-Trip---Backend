@@ -17,9 +17,9 @@ jobs:
           echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "PORT=${{ secrets.PORT }}" >> .env
-          echo "PORT=${{ secrets.EMAIL_PASS }}" >> .env
-          echo "PORT=${{ secrets.EMAIL_USER }}" >> .env
-          echo "PORT=${{ secrets.OWNER_EMAIL }}" >> .env
+          echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
+          echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> .env
+          echo "OWNER_EMAIL=${{ secrets.OWNER_EMAIL }}" >> .env
       - name: Login to dockerhub
         uses: docker/login-action@v3
         with:

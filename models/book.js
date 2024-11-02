@@ -4,9 +4,8 @@ const bookSchema = new mongoose.Schema({
   name: String,
   phone: Number,
   tickets: Number,
-  tourId: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'tour'
+  tourName: {
+    type: String,
   },
   createdAt: { type: Date, default: Date.now }
 })

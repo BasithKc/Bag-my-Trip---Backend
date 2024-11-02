@@ -47,12 +47,18 @@ module.exports = {
   // Function for booking a tour
   bookTour: async (req, res) => {
     try {
-      const bookDetials = req.body
+      const { name, phone, tickets, tourId } = req.body
 
       // Fetch tour detials
-      const tourDetails = await Tour.findById(bookDetials.tourId).select('title')
+      const tourDetails = await Tour.findById(tourId).select('title')
 
-      const newBook = new Book(bookDetials)
+      // Save new booking in db
+      const newBook = new Book({
+        name,
+        phone,
+        tickets,
+        tourName: tourDetails.title
+      })
       await newBook.save()
 
       // Send email notification
@@ -62,9 +68,9 @@ module.exports = {
         subject: 'New Tour Booking!!',
         html: `
         <h2>New Booking Details</h2>
-        <p><strong>Customer Name:</strong> ${bookDetials.name}</p>
-        <p><strong>Phone:</strong> ${bookDetials.phone}</p>
-        <p><strong>Number of Tickets:</strong> ${bookDetials.tickets}</p>
+        <p><strong>Customer Name:</strong> ${name}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Number of Tickets:</strong> ${tickets}</p>
         <p><strong>Tour ID:</strong> ${tourDetails.title}</p>
         <p><strong>Booking Time:</strong> ${new Date().toLocaleString()}</p>
       `

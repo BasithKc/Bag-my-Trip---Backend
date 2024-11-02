@@ -1,4 +1,5 @@
 const { uploadFile, deleteImages } = require('../config/s3')
+const Book = require('../models/book')
 
 // Imporing models
 const Category = require('../models/category')
@@ -262,6 +263,32 @@ module.exports = {
         message: 'Error creating tour',
         error: error.message
       });
+    }
+  },
+
+  // Function get bookings
+  getBookings: async (req, res) => {
+    try {
+      const bookings = await Book.find()
+
+      if (!bookings) {
+        return res.status(404).json({
+          success: false,
+          message: "Bookings not found"
+        })
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Fetched all bookings",
+        bookings
+      })
+    } catch (error) {
+
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      })
     }
   }
 }

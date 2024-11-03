@@ -23,9 +23,9 @@ app.use(cors({
 }))
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/admin/auth', adminAuthRoute)
-app.use('/admin/tours', toursApiRoutes)
-app.use('/user/tours', userRoutes)
+app.use('/api/admin/auth', adminAuthRoute)
+app.use('/api/admin/tours', toursApiRoutes)
+app.use('/api/user/tours', userRoutes)
 
 //Database connecting and port listen
 dbConnect().then(() => {

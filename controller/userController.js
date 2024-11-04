@@ -90,5 +90,25 @@ module.exports = {
         message: "Server error"
       })
     }
+  },
+
+  filterTour: async (req, res) => {
+    try {
+      const destination = req.query['destination']
+
+      const tours = await Tour.find({
+        location: destination
+      })
+
+      return res.status(200).json({
+        success: true,
+        messag: "Retrieved the tour data",
+        tours
+      })
+    } catch (error) {
+      return res.status(500).json({
+        message: 'Server Error'
+      })
+    }
   }
 }

@@ -224,6 +224,9 @@ module.exports = {
 
       //Handlefile uploads
       if (req.files.featureImage) {
+        //First delete from s3
+        await deleteImages([transformedTourData.featureImage])
+
         const featureImageUrl = await uploadFile(req.files.featureImage[0], 'feature-image')
 
         transformedTourData.featureImage = featureImageUrl

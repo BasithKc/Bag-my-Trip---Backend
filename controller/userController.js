@@ -94,11 +94,20 @@ module.exports = {
 
   filterTour: async (req, res) => {
     try {
-      const destination = req.query['destination']
+      const { destination, tripType } = req.query;
+      // Create a filter object
+      let filter = {};
 
-      const tours = await Tour.find({
-        location: destination
-      })
+      // Add filters dynamically if they exist
+      if (destination) {
+        filter.location = destination;
+      }
+      if (tripType) {
+        filter.tripType = tripType;
+      }
+
+      // Query the MongoDB collection with the dynamic filter
+      const tours = await Tour.find(filter)
 
       return res.status(200).json({
         success: true,

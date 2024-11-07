@@ -119,14 +119,15 @@ module.exports = {
   getTour: async (req, res) => {
     try {
       const page = parseInt(req.query.page) || 1;
-      const limit = 9;
+      const limit = 5;
       const skip = (page - 1) * limit;
 
       totalItems = await Tour.countDocuments()
 
       const tours = await Tour.find()
         .populate('categories')
-
+        .skip(skip)
+        .limit(limit)
         .exec()
 
       if (!tours) {
@@ -139,7 +140,9 @@ module.exports = {
       return res.status(200).json({
         success: true,
         message: 'Fetched tours',
-        tours
+        tours,
+        currentPage: page,
+        totalPages: Math.ceil(totalItems / limit)
       })
     } catch (error) {
       console.error(error);

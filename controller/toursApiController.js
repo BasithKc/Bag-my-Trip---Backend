@@ -121,11 +121,21 @@ module.exports = {
       const page = parseInt(req.query.page) || 1;
       const limit = 5;
       const skip = (page - 1) * limit;
+      const searchQuery = req.query.search || ''
 
-      totalItems = await Tour.countDocuments()
 
-      const tours = await Tour.find()
-        .populate('categories')
+      // Create search query for MongoDB
+      const query = searchQuery
+        ? {
+          $or: [
+            { title: { $regex: searchQuery, $options: 'i' } },
+          ]
+        }
+        : {};
+
+      totalItems = await Tour.countDocuments(query)
+
+      const tours = await Tour.find(query)
         .skip(skip)
         .limit(limit)
         .exec()

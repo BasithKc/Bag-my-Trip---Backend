@@ -118,8 +118,15 @@ module.exports = {
   // function returning all tours
   getTour: async (req, res) => {
     try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = 9;
+      const skip = (page - 1) * limit;
+
+      totalItems = await Tour.countDocuments()
+
       const tours = await Tour.find()
         .populate('categories')
+
         .exec()
 
       if (!tours) {

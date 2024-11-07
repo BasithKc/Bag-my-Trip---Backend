@@ -9,12 +9,23 @@ module.exports = {
   //Function for fetch all tours
   getAllTours: async (req, res) => {
     try {
-      const tours = await Tour.find().select('_id title featureImage pricePerPerson duration')
+      const page = parseInt(req.query.page) || 1;
+      const limit = 9;
+      const skip = (page - 1) * limit;
+
+      totalItems = await Tour.countDocuments()
+      const tours = await Tour.find()
+        .select('_id title featureImage pricePerPerson duration')
+        .skip(skip)
+        .limit(limit)
+        .exec();
 
       return res.status(200).json({
         success: true,
         message: "Fetched all tours",
-        tours
+        tours,
+        currentPage: page,
+        totalPages: Math.ceil(totalItems / limit)
       })
     } catch (error) {
       console.error(error)
@@ -106,13 +117,25 @@ module.exports = {
         filter.tripType = tripType;
       }
 
+      const page = parseInt(req.query.page) || 1;
+      const limit = 9;
+      const skip = (page - 1) * limit;
+
+      totalItems = await Tour.countDocuments()
+
       // Query the MongoDB collection with the dynamic filter
       const tours = await Tour.find(filter)
+        .select('_id title featureImage pricePerPerson duration')
+        .skip(skip)
+        .limit(limit)
+        .exec();
 
       return res.status(200).json({
         success: true,
         messag: "Retrieved the tour data",
-        tours
+        tours,
+        currentPage: page,
+        totalPages: Math.ceil(totalItems / limit)
       })
     } catch (error) {
       return res.status(500).json({

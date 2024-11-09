@@ -38,4 +38,10 @@ jobs:
       - name: Delete old container
         run: docker rm -f nodejs-app-container || true
       - name: Run docker container
-        run: docker run -d -p 5000:5000 --name nodejs-app-container basith7618/nodejs-app
+        run: |
+          docker run -d \
+          -p 5000:5000 \
+          -p 443:443 \
+          -v /etc/letsencrypt:/etc/letsencrypt:ro \
+          --name nodejs-app-container \
+          basith7618/nodejs-app

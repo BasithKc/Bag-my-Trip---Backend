@@ -31,8 +31,8 @@ app.use('/api/user/tours', userRoutes)
 
 // HTTPS configuration
 const sslOptions = {
-  cert: fs.readFileSync('/etc/letsencrypt/archive/www.bagmytrip.in/fullchain1.pem'),
-  key: fs.readFileSync('/etc/letsencrypt/archive/www.bagmytrip.in/privkey1.pem')
+  cert: fs.readFileSync('/etc/letsencrypt/live/www.bagmytrip.in/fullchain.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/live/www.bagmytrip.in/privkey.pem')
 };
 // Create HTTPS server
 const httpsServer = https.createServer(sslOptions, app);
@@ -40,7 +40,7 @@ const httpsServer = https.createServer(sslOptions, app);
 
 //Database connecting and port listen
 dbConnect().then(() => {
-  app.listen(port, () => {
+  httpsServer.listen(port, () => {
     console.log(`server is running on ${port}`);
   });
 });

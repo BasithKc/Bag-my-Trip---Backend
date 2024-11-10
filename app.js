@@ -19,10 +19,14 @@ const port = process.env.PORT || 5000;
 
 //Middle ware for data passing and session
 app.use(express.json());
+
+// CORS configuration
 app.use(cors({
-  orgin: 'http://13.49.69.58:4200/',
+  origin: 'https://www.bagmytrip.in',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
-}))
+}));
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/admin/auth', adminAuthRoute)
@@ -32,7 +36,7 @@ app.use('/api/user/tours', userRoutes)
 // HTTPS configuration
 const sslOptions = {
   cert: fs.readFileSync('/etc/letsencrypt/live/www.bagmytrip.in/fullchain.pem'),
-  key: fs.readFileSync('/etc/letsencrypt/live/www.bagmytrip.in/privkey.pem')
+  key: fs.readFileSync('/etc/letsencrypt/live/www.bagmytrip.in/privkey  .pem')
 };
 // Create HTTPS server
 const httpsServer = https.createServer(sslOptions, app);

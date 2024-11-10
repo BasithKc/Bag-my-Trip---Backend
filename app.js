@@ -3,6 +3,7 @@ const express = require("express");
 require("dotenv").config();
 const https = require('https')
 const cors = require('cors')
+const fs = require('fs')
 
 //Import configs
 const dbConnect = require('./config/db')
@@ -30,8 +31,8 @@ app.use('/api/user/tours', userRoutes)
 
 // HTTPS configuration
 const sslOptions = {
-  cert: fs.readFileSync('/etc/letsencrypt/live/bagmytrip.in/fullchain.pem'),
-  key: fs.readFileSync('/etc/letsencrypt/live/bagmytrip.in/privkey.pem')
+  cert: fs.readFileSync('/etc/letsencrypt/archive/www.bagmytrip.in/fullchain1.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/archive/www.bagmytrip.in/privkey1.pem')
 };
 // Create HTTPS server
 const httpsServer = https.createServer(sslOptions, app);

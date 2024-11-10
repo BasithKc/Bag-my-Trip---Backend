@@ -36,7 +36,7 @@ app.use('/api/user/tours', userRoutes)
 // HTTPS configuration
 const sslOptions = {
   cert: fs.readFileSync('/etc/letsencrypt/live/www.bagmytrip.in/fullchain.pem'),
-  key: fs.readFileSync('/etc/letsencrypt/live/www.bagmytrip.in/privkey  .pem')
+  key: fs.readFileSync('/etc/letsencrypt/live/www.bagmytrip.in/privkey.pem')
 };
 // Create HTTPS server
 const httpsServer = https.createServer(sslOptions, app);

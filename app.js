@@ -23,6 +23,7 @@ app.use(cors({
   origin: ['https://www.bagmytrip.in', 'https://bagmytrip.in'],
   credentials: true
 }));
+
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/admin/auth', adminAuthRoute)

@@ -35,14 +35,18 @@ jobs:
     steps:
       - name: Pull image from dockerhub
         run: docker pull basith7618/nodejs-app:latest
+
       - name: Delete old container
         run: docker rm -f nodejs-app-container || true
-        
+
+      - name: Create network
+        run: docker network create app-network || true
+
       - name: Run docker container
         run: |
           docker run -d \
           -p 5000:5000 \
-          --network web-network \
+          --network app-network \
           -v /etc/letsencrypt:/etc/letsencrypt:ro \
           --name nodejs-app-container \
           basith7618/nodejs-app

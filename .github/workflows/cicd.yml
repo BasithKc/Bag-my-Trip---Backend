@@ -37,6 +37,7 @@ jobs:
         run: docker pull basith7618/nodejs-app:latest
       - name: Delete old container
         run: docker rm -f nodejs-app-container || true
+        
       - name: Run docker container
         run: |
           docker run -d \

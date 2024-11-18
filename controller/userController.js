@@ -36,6 +36,31 @@ module.exports = {
     }
   },
 
+  // Get treinding trips
+  getTrendingTours: async (req, res) => {
+    try {
+      const tours = await Tour.find({ tripType: 'international' }).limit(5)
+      if (!tours) {
+        return res.status(404).json({
+          success: false,
+          message: "Cannot fetch tours"
+        })
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Tours fetched successfully',
+        tours
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      })
+    }
+  },
+
   //Function for fetch a specific tour
   getTour: async (req, res) => {
     const tourId = req.params.id
@@ -81,8 +106,8 @@ module.exports = {
         <h2>New Booking Details</h2>
         <p><strong>Customer Name:</strong> ${name}</p>
         <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Number of Tickets:</strong> ${tickets}</p>
-        <p><strong>Tour ID:</strong> ${tourDetails.title}</p>
+        <p><strong>Number of Travelers:</strong> ${tickets}</p>
+        <p><strong>Tour Name:</strong> ${tourDetails.title}</p>
         <p><strong>Booking Time:</strong> ${new Date().toLocaleString()}</p>
       `
       }

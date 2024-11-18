@@ -6,6 +6,8 @@ const userController = require('../controller/userController')
 // Return all tours
 router.get('/all', userController.getAllTours)
 
+router.get('/trending', userController.getTrendingTours)
+
 router.get('/filter', userController.filterTour)
 
 // Book a tour

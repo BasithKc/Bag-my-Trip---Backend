@@ -15,7 +15,7 @@ module.exports = {
 
       totalItems = await Tour.countDocuments()
       const tours = await Tour.find()
-        .select('_id title featureImage pricePerPerson duration')
+        .select('_id title description featureImage pricePerPerson duration')
         .skip(skip)
         .limit(limit)
         .exec();
@@ -39,7 +39,12 @@ module.exports = {
   // Get treinding trips
   getTrendingTours: async (req, res) => {
     try {
-      const tours = await Tour.find({ tripType: 'international' }).limit(5)
+      const tours = await Tour.find({
+        $or: [
+          { title: { $regex: 'Kashmir', $options: 'i' } },
+          { title: { $regex: 'Manali', $options: 'i' } }
+        ]
+      })
       if (!tours) {
         return res.status(404).json({
           success: false,

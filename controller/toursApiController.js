@@ -257,9 +257,6 @@ module.exports = {
 
       // handle gallery images uplaod
       if (req.files.gallery) {
-        //First delete from s3
-        await deleteImages(transformedTourData.gallery)
-
         const galleryUrls = await Promise.all(req.files.gallery.map(async (file) => {
           return await uploadFile(file, 'gallery-images')
         }))

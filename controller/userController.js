@@ -155,7 +155,7 @@ module.exports = {
 
       // Query the MongoDB collection with the dynamic filter
       const tours = await Tour.find(filter)
-        .select('_id title featureImage pricePerPerson duration')
+        .select('_id title featureImage pricePerPerson duration description')
         .skip(skip)
         .limit(limit)
         .exec();

@@ -262,10 +262,9 @@ module.exports = {
         }))
         transformedTourData.gallery = galleryUrls
       }
-      if (tourData.existingGallery.length) {
-        tourData.existingGallery.forEach(gallery => {
-          transformedTourData.gallery.push(gallery)
-        })
+
+      if (tourData.existingGallery.length > 0) {
+        transformedTourData.gallery = tourData.existingGallery
       }
 
       const { existingFeature, existingGallery, ...cleanedTourData } = transformedTourData;

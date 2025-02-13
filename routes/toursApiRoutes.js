@@ -27,8 +27,6 @@ router.get('/bookings', tourApiController.getBookings)
 //Endpoint for deleting tour
 router.delete('/delete/:id', tourApiController.deleteTour)
 
-
-
 // Update tours
 router.put('/update/:id', upload.fields([
   { name: 'featureImage', maxCount: 1 },

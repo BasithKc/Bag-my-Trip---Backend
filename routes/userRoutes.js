@@ -16,6 +16,4 @@ router.post('/book', userController.bookTour)
 // Get tour by id
 router.get('/:id', userController.getTour)
 
-
-
 module.exports = router

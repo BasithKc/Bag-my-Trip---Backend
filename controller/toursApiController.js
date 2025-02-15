@@ -123,7 +123,6 @@ module.exports = {
       const skip = (page - 1) * limit;
       const searchQuery = req.query.search || ''
 
-
       // Create search query for MongoDB
       const query = searchQuery
         ? {

@@ -287,6 +287,7 @@ module.exports = {
     }
   },
 
+  
   // Function get bookings
   getBookings: async (req, res) => {
     try {

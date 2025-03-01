@@ -214,8 +214,6 @@ module.exports = {
     }
   },
 
-
-  
   // update tour
   updateTour: async (req, res) => {
     try {

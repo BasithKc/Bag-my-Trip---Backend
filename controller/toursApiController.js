@@ -253,7 +253,6 @@ module.exports = {
         transformedTourData.featureImage = tourData.existingFeature
       }
 
-
       // handle gallery images uplaod
       if (req.files.gallery) {
         const galleryUrls = await Promise.all(req.files.gallery.map(async (file) => {
@@ -287,7 +286,6 @@ module.exports = {
     }
   },
 
-  
   // Function get bookings
   getBookings: async (req, res) => {
     try {

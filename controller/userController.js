@@ -43,7 +43,8 @@ module.exports = {
       const tours = await Tour.find({
         $or: [
           { title: { $regex: 'Kashmir', $options: 'i' } },
-          { title: { $regex: 'Manali', $options: 'i' } }
+          { title: { $regex: 'Manali', $options: 'i' } },
+          { title: { $regex: 'Andaman', $options: 'i' } },
         ]
       })
       if (!tours) {

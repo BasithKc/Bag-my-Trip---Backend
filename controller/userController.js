@@ -67,6 +67,7 @@ module.exports = {
     }
   },
 
+  
   //Function for fetch a specific tour
   getTour: async (req, res) => {
     const tourId = req.params.id

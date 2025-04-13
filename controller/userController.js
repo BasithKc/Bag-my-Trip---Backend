@@ -6,7 +6,6 @@ const Book = require('../models/book')
 const transporter = require('../config/nodemailer')
 
 module.exports = {
-  
   //Function for fetch all tours
   getAllTours: async (req, res) => {
     try {

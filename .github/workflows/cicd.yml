@@ -10,6 +10,14 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+      - name: 🧹 Free up disk space
+        run: |
+          echo "Before cleanup:"
+          df -h
+          docker system prune -af
+          docker volume prune -f
+          echo "After cleanup:"
+          df -h
       - name: Create .env file
         run: |
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env

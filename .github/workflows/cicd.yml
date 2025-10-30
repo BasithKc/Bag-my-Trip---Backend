@@ -3,7 +3,6 @@ name: Deploy Node Application
 on:
   push:
     branches: [feature]
-
 jobs:
   build:
     runs-on: ubuntu-latest

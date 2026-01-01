@@ -35,5 +35,4 @@ router.put('/update/:id', upload.fields([
 
 // Get tour by id
 router.get('/:tourId', tourApiController.getTourById)
-
 module.exports = router

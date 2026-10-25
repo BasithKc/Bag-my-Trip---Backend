@@ -20,7 +20,7 @@ app.use(express.json());
 
 // CORS configuration
 app.use(cors({
-  origin: ['https://www.bagmytrip.in', 'https://bagmytrip.in', 'http://localhost:4200'],
+  origin: ['https://www.bagmytrip.in', 'https://bagmytrip.in', 'https://bag-my-trip-backend.onrender.com', 'http://localhost:4200'],
   credentials: true
 }));
 
